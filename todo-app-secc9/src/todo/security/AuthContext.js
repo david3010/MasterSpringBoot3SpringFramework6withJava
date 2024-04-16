@@ -26,18 +26,18 @@ function AuthProvider({ children }) {
 
     async function login(username, password) {
 
-        const baToken = 'Basic ' + window.btoa(username + ":" + password)
-
         try {
-            const response = await executeBasicAuthenticationService(baToken)
+            const response = await executeBasicAuthenticationService(username, password)
 
             if (response.status === 200) {
+
+                const jwtToken = 'Bearer ' + response.data.token
                 setAuthenticated(true)
                 setUserName(username)
-                setToken(baToken)
+                setToken(jwtToken)
 
                 clientURL.interceptors.request.use((config) => {
-                    config.headers.Authorization=baToken
+                    config.headers.Authorization = jwtToken
                     return config
                 });
 
