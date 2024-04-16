@@ -20,8 +20,8 @@ function LoginComponent() {
         setPassword(e.target.value)
     }
 
-    function submitForm() {
-        if (authContext.login(username, password)) {
+    async function submitForm() {
+        if (await authContext.login(username, password)) {
             navigate(`/dashboard/${username}`)
         } else {
             setShowErrorMessage(true)

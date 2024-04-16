@@ -1,12 +1,38 @@
+import { useEffect, useState } from "react"
+import { retrieveAllTodos, deleteTodoByUsernameAndId, retrieveTodoByUsernameAndId } from "../api/TodoApiService"
+import { useAuth } from "../security/AuthContext";
+import { useNavigate } from 'react-router-dom'
+
 function ListTodosComponent() {
-    const today = new Date()
-    let targetDate = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())
-    const todos = [
-        { id: 1, description: 'Learn Spring Boot', targetDate, done: false },
-        { id: 2, description: 'Learn Spring Boot', targetDate, done: false },
-        { id: 3, description: 'Learn Spring Boot', targetDate, done: false },
-        { id: 4, description: 'Learn Spring Boot', targetDate, done: false }
-    ]
+
+    let authContext = useAuth();
+
+    const navigate = useNavigate()
+
+    let [todos, setTodos] = useState([])
+
+    useEffect(() => refreshTodos(), [])
+
+    function refreshTodos() {
+        retrieveAllTodos(authContext.username).then(response => {
+            setTodos(response.data)
+        })
+    }
+
+    function handleTodoDetailsClick(username, id) {
+        navigate(`/todo/${id}`)
+    }
+
+    function handleTodoDeleteClick(username, id) {
+        deleteTodoByUsernameAndId(username, id).then(response => {
+            refreshTodos()
+        })
+    }
+
+    function addNewTodo() {
+        navigate('/todo/-1')
+    }
+
     return (
         <div className='container'>
             <h1>Things you have todo</h1>
@@ -19,7 +45,6 @@ function ListTodosComponent() {
                             <th scope="col">Target Date</th>
                             <th scope="col">Its Done</th>
                             <th scope="col"></th>
-                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,22 +53,21 @@ function ListTodosComponent() {
                                 return <tr key={todo.id}>
                                     <td>{todo.id}</td>
                                     <td>{todo.description}</td>
-                                    <td>{todo.targetDate.toDateString()}</td>
+                                    <td>{todo.targetDate}</td>
                                     <td>{todo.done | Boolean}</td>
                                     <td>
-                                        
-                                    </td>
-                                    <td>
-                                        
+                                        <button className="btn btn-outline-success" onClick={() => handleTodoDetailsClick(todo.username, todo.id)}>Ver</button>
+                                        <button className="btn btn-outline-danger ms-3" onClick={() => handleTodoDeleteClick(todo.username, todo.id)}>Eliminar</button>
                                     </td>
                                 </tr>
                             })
                         }
                     </tbody>
                 </table>
+                <button className="btn btn-outline-primary" onClick={addNewTodo}>Add New Todo</button>
             </div>
         </div>
     )
 }
 
-export default ListTodosComponent;
+export default ListTodosComponent
