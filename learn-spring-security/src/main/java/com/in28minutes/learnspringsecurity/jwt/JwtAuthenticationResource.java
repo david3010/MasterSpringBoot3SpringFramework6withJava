@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 @RestController
 public class JwtAuthenticationResource {
 
-//    JwtEncoder jwtEncoder;
-//
-//    public JwtAuthenticationResource(JwtEncoder jwtEncoder) {
-//        this.jwtEncoder = jwtEncoder;
-//    }
+    JwtEncoder jwtEncoder;
+
+    public JwtAuthenticationResource(JwtEncoder jwtEncoder) {
+        this.jwtEncoder = jwtEncoder;
+    }
 
     @PostMapping("/authenticate")
     public JWTResponse authenticate(Authentication authentication) {
@@ -33,7 +33,7 @@ public class JwtAuthenticationResource {
                 .subject(authentication.getName())
                 .claim("scope", createScope(authentication))
                 .build();
-        return "";//jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
     private String createScope(Authentication authentication) {

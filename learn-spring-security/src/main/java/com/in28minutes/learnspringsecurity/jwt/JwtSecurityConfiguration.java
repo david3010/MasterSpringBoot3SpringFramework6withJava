@@ -43,8 +43,8 @@ import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-//@Configuration
-//@EnableMethodSecurity(jsr250Enabled = true, securedEnabled = true)
+@Configuration
+@EnableMethodSecurity(jsr250Enabled = true, securedEnabled = true)
 public class JwtSecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

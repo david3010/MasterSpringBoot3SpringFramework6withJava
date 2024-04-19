@@ -24,7 +24,7 @@ public class TodoResource {
     );
 
     @GetMapping("/todos")
-    @RolesAllowed({"ADMIN", "STAFF"})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_STAFF"})
     public List<Todo> retrieveAllTodos() {
         return TODOS;
     }
